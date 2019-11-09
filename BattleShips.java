@@ -80,14 +80,14 @@ public class BattleShips {
             System.out.print("Enter Y coordinate for your " + i + " ship: ");
             int y = input.nextInt();
 
-            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y] == " "))
+            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[y][x] == " "))
             {
-                grid[x][y] =   "@";
+                grid[y][x] =   "@";
                 i++;
             }
-            else if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && grid[x][y] == "@")
+            else if((y >= 0 && y < numRows) && (x >= 0 && x < numCols) && grid[y][x] == "@")
                 System.out.println("You can't place two or more ships on the same location");
-            else if((x < 0 || x >= numRows) || (y < 0 || y >= numCols))
+            else if((y < 0 || y >= numRows) || (x < 0 || x >= numCols))
                 System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
         }
         printOceanMap();
@@ -134,21 +134,21 @@ public class BattleShips {
 
             if ((x >= 0 && x < numRows) && (y >= 0 && y < numCols)) //valid guess
             {
-                if (grid[x][y] == "x") //if computer ship is already there; computer loses ship
+                if (grid[y][x] == "x") //if computer ship is already there; computer loses ship
                 {
                     System.out.println("Boom! You sunk the ship!");
-                    grid[x][y] = "!"; //Hit mark
+                    grid[y][x] = "!"; //Hit mark
                     --BattleShips.computerShips;
                 }
-                else if (grid[x][y] == "@") {
+                else if (grid[y][x] == "@") {
                     System.out.println("Oh no, you sunk your own ship :(");
-                    grid[x][y] = "x";
+                    grid[y][x] = "x";
                     --BattleShips.playerShips;
                     ++BattleShips.computerShips;
                 }
-                else if (grid[x][y] == " ") {
+                else if (grid[y][x] == " ") {
                     System.out.println("Sorry, you missed");
-                    grid[x][y] = "-";
+                    grid[y][x] = "-";
                 }
             }
             else if ((x < 0 || x >= numRows) || (y < 0 || y >= numCols))  //invalid guess
