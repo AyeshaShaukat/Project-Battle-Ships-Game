@@ -1,13 +1,3 @@
-/** This project will help you get more familiar with arrays.
- *  You will be recreating the game of battleships.
- *  A player will place 5 of their ships on a 10 by 10 grid.
- *  The computer player will deploy five ships on the same grid.
- *  Once the game starts the player and computer take turns,
- *  trying to sink each other's ships by guessing the coordinates to "attack".
- *  The game ends when either the player or computer has no ships left.
- * https://courses.edx.org/courses/course-v1:Microsoft+DEV277x+1T2018/courseware/76c11a375a0e495e83ab68121566fb12/8f250da826d7405d8fecf99aca3a5e9a/?child=first
- */
-
 import java.util.*;
 
 public class BattleShips {
@@ -17,6 +7,7 @@ public class BattleShips {
     public static int computerShips;
     public static String[][] grid = new String[numRows][numCols];
     public static int[][] missedGuesses = new int[numRows][numCols];
+    public static int cheat;
 
     public static void main(String[] args){
         System.out.println("**** Welcome to Battle Ships game ****");
@@ -42,19 +33,23 @@ public class BattleShips {
 
     public static void createOceanMap(){
         //First section of Ocean Map
-        System.out.print("  ");
+        System.out.print("\t");
         for(int i = 0; i < numCols; i++)
-                System.out.print(i);
+            System.out.print(i + "\t");
+        System.out.println();
+        System.out.print("\t");
+        for(int i = 0; i < numCols; i++)
+            System.out.print("_" + "\t");
         System.out.println();
 
         //Middle section of Ocean Map
         for(int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
-                grid[i][j] = " ";
+                grid[i][j] = "\t";
                 if (j == 0)
                     System.out.print(i + "|" + grid[i][j]);
                 else if (j == grid[i].length - 1)
-                    System.out.print(grid[i][j] + "|" + i);
+                    System.out.print(grid[i][j]+"\t" + "|" + i);
                 else
                     System.out.print(grid[i][j]);
             }
@@ -62,9 +57,13 @@ public class BattleShips {
         }
 
         //Last section of Ocean Map
-        System.out.print("  ");
+        System.out.print("\t");
         for(int i = 0; i < numCols; i++)
-            System.out.print(i);
+            System.out.print("_" + "\t");
+        System.out.println();
+        System.out.print("\t");
+        for(int i = 0; i < numCols; i++)
+            System.out.print(i + "\t");
         System.out.println();
     }
 
@@ -76,16 +75,16 @@ public class BattleShips {
         BattleShips.playerShips = 5;
         for (int i = 1; i <= BattleShips.playerShips; ) {
             System.out.print("Enter X coordinate for your " + i + " ship: ");
-            int x = input.nextInt();
-            System.out.print("Enter Y coordinate for your " + i + " ship: ");
             int y = input.nextInt();
+            System.out.print("Enter Y coordinate for your " + i + " ship: ");
+            int x = input.nextInt();
 
-            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y] == " "))
+            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y] == "\t"))
             {
-                grid[x][y] =   "@";
+                grid[x][y] =   "\t@";
                 i++;
             }
-            else if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && grid[x][y] == "@")
+            else if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && grid[x][y] == "@\t")
                 System.out.println("You can't place two or more ships on the same location");
             else if((x < 0 || x >= numRows) || (y < 0 || y >= numCols))
                 System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
@@ -101,9 +100,9 @@ public class BattleShips {
             int x = (int)(Math.random() * 10);
             int y = (int)(Math.random() * 10);
 
-            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y] == " "))
+            if((x >= 0 && x < numRows) && (y >= 0 && y < numCols) && (grid[x][y] == "\t"))
             {
-                grid[x][y] =   "x";
+                grid[x][y] =   "\tx";
                 System.out.println(i + ". ship DEPLOYED");
                 i++;
             }
@@ -128,63 +127,66 @@ public class BattleShips {
         do {
             Scanner input = new Scanner(System.in);
             System.out.print("Enter X coordinate: ");
-            x = input.nextInt();
-            System.out.print("Enter Y coordinate: ");
             y = input.nextInt();
+            System.out.print("Enter Y coordinate: ");
+            x = input.nextInt();
 
             if ((x >= 0 && x < numRows) && (y >= 0 && y < numCols)) //valid guess
             {
-                if (grid[x][y] == "x") //if computer ship is already there; computer loses ship
+                if (grid[x][y] == "\tx") //if computer ship is already there; computer loses ship
                 {
                     System.out.println("Boom! You sunk the ship!");
-                    grid[x][y] = "!"; //Hit mark
+                    grid[x][y] = "\t!"; //Hit mark
                     --BattleShips.computerShips;
                 }
-                else if (grid[x][y] == "@") {
+                else if (grid[x][y] == "\t@") {
                     System.out.println("Oh no, you sunk your own ship :(");
-                    grid[x][y] = "x";
+                    grid[x][y] = "\tx";
                     --BattleShips.playerShips;
                     ++BattleShips.computerShips;
                 }
-                else if (grid[x][y] == " ") {
+                else if (grid[x][y] == "\t") {
                     System.out.println("Sorry, you missed");
-                    grid[x][y] = "-";
+                    grid[x][y] = "\t-";
                 }
             }
             else if ((x < 0 || x >= numRows) || (y < 0 || y >= numCols))  //invalid guess
                 System.out.println("You can't place ships outside the " + numRows + " by " + numCols + " grid");
+            if(y<0) {
+                cheat = y;
+                System.out.println("Spies have been sent out to scout enemie ships!");
+            }
         }while((x < 0 || x >= numRows) || (y < 0 || y >= numCols));  //keep re-prompting till valid guess
     }
 
     public static void computerTurn(){
         System.out.println("\nCOMPUTER'S TURN");
         //Guess co-ordinates
+
         int x = -1, y = -1;
         do {
-            x = (int)(Math.random() * 10);
-            y = (int)(Math.random() * 10);
-
-            if ((x >= 0 && x < numRows) && (y >= 0 && y < numCols)) //valid guess
+            x = (int) (Math.random() * 10);
+            y = (int) (Math.random() * 10);
+        } while(missedGuesses[x][y]==1);
+        if ((x >= 0 && x < numRows) && (y >= 0 && y < numCols)) //valid guess
+        {
+            if (grid[x][y] == "\t@") //if player ship is already there; player loses ship
             {
-                if (grid[x][y] == "@") //if player ship is already there; player loses ship
-                {
-                    System.out.println("The Computer sunk one of your ships!");
-                    grid[x][y] = "x";
-                    --BattleShips.playerShips;
-                    ++BattleShips.computerShips;
-                }
-                else if (grid[x][y] == "x") {
-                    System.out.println("The Computer sunk one of its own ships");
-                    grid[x][y] = "!";
-                }
-                else if (grid[x][y] == " ") {
-                    System.out.println("Computer missed");
-                    //Saving missed guesses for computer
-                    if(missedGuesses[x][y] != 1)
-                        missedGuesses[x][y] = 1;
+                System.out.println("The Computer sunk one of your ships!");
+                grid[x][y] = "\tx";
+                --BattleShips.playerShips;
+                ++BattleShips.computerShips;
+            }
+            else if (grid[x][y] == "\tx") {
+                System.out.println("The Computer sunk one of its own ships");
+                grid[x][y] = "\t!";
+            }
+            else if (grid[x][y] == "\t") {
+                System.out.println("Computer missed");
+                //Saving missed guesses for computer
+                missedGuesses[x][y] = 1;
                 }
             }
-        }while((x < 0 || x >= numRows) || (y < 0 || y >= numCols));  //keep re-prompting till valid guess
     }
 
     public static void gameOver(){
@@ -194,14 +196,18 @@ public class BattleShips {
         else
             System.out.println("Sorry, you lost the battle");
         System.out.println();
-   }
+    }
 
     public static void printOceanMap(){
         System.out.println();
         //First section of Ocean Map
-        System.out.print("  ");
+        System.out.print("\t");
         for(int i = 0; i < numCols; i++)
-            System.out.print(i);
+            System.out.print(i + "\t");
+        System.out.println();
+        System.out.print("\t");
+        for(int i = 0; i < numCols; i++)
+            System.out.print("_" + "\t");
         System.out.println();
 
         //Middle section of Ocean Map
@@ -209,17 +215,27 @@ public class BattleShips {
             System.out.print(x + "|");
 
             for (int y = 0; y < grid[x].length; y++){
-                System.out.print(grid[x][y]);
+                if(grid[x][y]!= "\tx")
+                    System.out.print(grid[x][y]);
+                else if(grid[x][y]== "\tx" && cheat<0) {
+                    System.out.print(grid[x][y]);
+                    cheat++;
+                }
+                else
+                    System.out.print("\t");
             }
 
-            System.out.println("|" + x);
+            System.out.println("\t|" + x);
         }
 
         //Last section of Ocean Map
-        System.out.print("  ");
+        System.out.print("\t");
         for(int i = 0; i < numCols; i++)
-            System.out.print(i);
+            System.out.print("_" + "\t");
+        System.out.println();
+        System.out.print("\t");
+        for(int i = 0; i < numCols; i++)
+            System.out.print(i + "\t");
         System.out.println();
     }
 }
-
