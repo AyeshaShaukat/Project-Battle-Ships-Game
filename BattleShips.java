@@ -180,6 +180,7 @@ public class BattleShips {
             else if (grid[x][y] == "\tx") {
                 System.out.println("The Computer sunk one of its own ships");
                 grid[x][y] = "\t!";
+                --BattleShips.computerShips;
             }
             else if (grid[x][y] == "\t") {
                 System.out.println("Computer missed");
